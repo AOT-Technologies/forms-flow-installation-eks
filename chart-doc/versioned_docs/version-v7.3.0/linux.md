@@ -34,54 +34,73 @@ A zip file will be downloaded.
 
 ## Step 2: Extract the downloaded .zip file
 
+> [!NOTE]
+> The steps in this section show a Linux file manager (e.g. Nautilus). macOS users follow the same flow using **Finder** — the folder structure and script names are identical.
+
 ![extracted folder preview](../static/img/linux/extracted.png)
 
 
-**Now double click and open the exctracted folder and go to the `scripts` directory:**
+**Now double click and open the extracted folder and go to the `scripts` directory:**
 
 ![scripts dir preview](../static/img/linux/scripts-dir.png)
 
 
-There you can see  **install.bash** file:
+There you can see **install.bash** file:
 
 ![install file preview](../static/img/linux/install-file.png)
 
 
-Now right click anywhere in the file manager  and click **open in terminal**:
+Now open a terminal inside the `scripts` directory:
+
+- **Linux:** Right-click anywhere in the file manager and click **Open in Terminal**.
+- **macOS:** Right-click the `scripts` folder in Finder and select **New Terminal at Folder**. If this option is not visible, open the **Terminal** app (Applications > Utilities) and run:
+  ```bash
+  cd /path/to/extracted-folder/scripts
+  ```
 
 ![.bat file preview](../static/img/linux/open-in-terminal.png)
 
 
-Now type `sudo su` in the terminal to gain elevated privilages whcih is required for the installation procedure:
+Now type `sudo su` in the terminal to gain elevated privileges which is required for the installation procedure:
+
+> [!NOTE]
+> **Linux:** `sudo su` switches you to the root user. If prompted, enter your user password.
+> 
+> **macOS:** `sudo su` works the same way. Alternatively, you can prefix each command with `sudo` instead of switching to root.
 
 ![sudo permissions](../static/img/linux/sudo-su.png)
-- You can type `ls` to see the **install.sh** file there
+- You can type `ls` to see the **install.bash** file there
 
 
 ## Step 3: Install using install.bash file
 
-Type `./install.sh` to start the installation:
+First, give the script executable permission, then run it:
 
-- It may ask for **Do you want to continue** because it may not tested in the Docker version you have. Just enter **'y'** and proceed with the installation.
+```bash
+chmod +x install.bash
+./install.bash
+```
+
+- It may ask **Do you want to continue** because it may not have been tested on your Docker version. Just enter **`y`** and proceed with the installation.
 
 ![installation start](../static/img/linux/installation-start.png)
 
 
-a) Verify the IP address is valid or incorrect after that. If true, provide **‘y’** as the answer, or else answer **‘n’**:
+a) Verify the IP address shown is correct. If it is correct, enter **`y`**, otherwise enter **`n`** to provide the correct IP:
 
 ![IP Address prompt](../static/img/linux/ip-address-prompt.png)
 
-b) Now to install “Analytics” enter ‘y’:
+b) When asked whether to install **Analytics**, enter **`y`** to include Redash, or **`n`** to skip:
 
 ![Redash analytics prompt](../static/img/linux/analytics-prompt.png)
-- If you need Redash Analytics Engine in the installation, provide **‘y’** as the answer, or else answer **‘n’**. (To know more about Redash Analytics Engine, please visit [Redash](https://redash.io/help/) ).
+- If you need the Redash Analytics Engine, provide **`y`**. (To learn more, visit [Redash](https://redash.io/help/)).
 
-c) Now it will ask for *Redash API Key*:
+c) The installer will then ask for a **Redash API Key**:
 ![redash api key prompt](../static/img/7.3.0/linux/redash-prompt.png)
 - The Redash application should be available for use at port defaulted to 7000. Open http://localhost:7001/ on your machine and register with any valid credentials:
  ![redash landing page](../static/img/7.3.0/redash-landing.png)
 
-- Then the API Key can be found at settings > Account > API Key.
+- The API Key can be found at **Settings > Account > API Key**.
  ![redash api page](../static/img/7.3.0/linux/redash-api-page.png)
 
 d) After the installation process has been completed it will show **formsflow.ai is successfully installed**.
@@ -144,11 +163,11 @@ mail.password=CHANGEME
 
  Srl No | Service Name | Usage | Access | Default credentials (userName / Password)|
 --- | --- | --- | --- | --- 
-1|`Keycloak`|Authentication|`http://localhost:8080`| `admin/changeme`
-2|`forms-flow-forms`|form.io form building (Note: Form.io UI is disabled by default). This must be started earlier for resource role id's creation|`http://localhost:3001`|`admin@example.com/changeme`
-3|`forms-flow-analytics`|Redash analytics server, This must be started earlier for redash key creation|`http://localhost:7001`|Use the credentials used for registration / [Default user credentials](https://github.com/AOT-Technologies/forms-flow-ai-deployment/blob/main/docs/forms-flow-ai-properties.md)
-4|`forms-flow-web`|formsflow Landing web app|`http://localhost:3000`|[Default user credentials](https://github.com/AOT-Technologies/forms-flow-ai-deployment/blob/main/docs/forms-flow-ai-properties.md)
-5|`forms-flow-api`|API services|`http://localhost:5001`|`Authorization tocken from keycloak role based user credentials`
+1|`forms-flow-web`|formsflow Landing web app|`http://localhost:3000`| `formsflow-admin/changeme`
+2|`Keycloak`|Authentication|`http://localhost:8080`| `admin/changeme`
+3|`forms-flow-forms`|form.io form building (Note: Form.io UI is disabled by default). This must be started earlier for resource role id's creation|`http://localhost:3001`|`admin@example.com/changeme`
+4|`forms-flow-analytics`|Redash analytics server, This must be started earlier for redash key creation|`http://localhost:7001`|Use the credentials used for registration / [Default user credentials](https://github.com/AOT-Technologies/forms-flow-ai-deployment/blob/main/docs/forms-flow-ai-properties.md)
+5|`forms-flow-api`|API services|`http://localhost:5001`|`Authorization token from keycloak role based user credentials`
 6|`forms-flow-bpm`|Camunda integration|`http://localhost:8000/camunda`| [Default user credentials](https://github.com/AOT-Technologies/forms-flow-ai-deployment/blob/main/docs/forms-flow-ai-properties.md)
 7|`forms-flow-data-layer`|GraphQL integration|`http://localhost:5500/queries`| 
 
@@ -156,13 +175,18 @@ mail.password=CHANGEME
 ## Uninstall Formsflow (Optional)
 
 Uninstalling is optional and can be performed whenever you wish to remove the formsflow.ai stack from your machine. To uninstall formsflow installed through quick installation, follow the steps:
-- Go to the folder you exctracted earlier and go to the `scripts` directory
-  - There you can see **uninstall.bash** file
-- Now right click anywhere in the file manager  and click **open in terminal**:
-- Type `chmod +x uninstall.bash` to give executable permission to the file
-  - If you type `ls` you can see the uninstall.bash in green color means it has now executable permission
-- Now just type `./uninstall.bash`
-  - It will prompt you **to uninstall formsflow.ai installation** click **'y'** and proceed with the installation.
+
+1. Go to the folder you extracted earlier and navigate to the `scripts` directory. You will see the **uninstall.bash** file there.
+2. Open a terminal in that directory:
+   - **Linux:** Right-click anywhere in the file manager and click **Open in Terminal**.
+   - **macOS:** Right-click the `scripts` folder in Finder and select **New Terminal at Folder**.
+3. Give the script executable permission and run it:
+   ```bash
+   chmod +x uninstall.bash
+   ./uninstall.bash
+   ```
+   - If you run `ls` you can see **uninstall.bash** highlighted in green, confirming it now has executable permission.
+4. When prompted, enter **`y`** to confirm and proceed with the uninstallation.
 
 ![uninstall formsflow](../static/img/linux/uninstall.png)
 
@@ -181,19 +205,12 @@ This section covers common issues, error messages, and troubleshooting steps enc
 
 * **Possible Cause**: You have a local database, a web application, or another Docker container running on ports like `8080` (Keycloak), `3000` (Web app), `3001` (Forms), or `7001` (Analytics).
 * **Solution**:
-  1. Find and terminate the process using the port:
-     * **Windows (PowerShell)**:
-       ```powershell
-       netstat -ano | findstr :3000
-       # Stop the process using the PID found
-       Stop-Process -Id <PID> -Force
-       ```
-     * **Linux / MAC**:
-       ```bash
-       sudo lsof -i :3000
-       # Kill the process
-       kill -9 <PID>
-       ```
+  1. Find and terminate the process using the port (works on both **Linux** and **macOS**):
+     ```bash
+     sudo lsof -i :3000
+     # Kill the process using the PID found above
+     kill -9 <PID>
+     ```
   2. Alternatively, modify the port mapping in the `docker-compose.yml` file under the respective service.
 
 ### Q: Container exits with Code 137 (Out of Memory)
@@ -232,31 +249,3 @@ This section covers common issues, error messages, and troubleshooting steps enc
      docker compose restart forms-flow-bpm forms-flow-api
      ```
   2. If the database credentials were changed, ensure the corresponding variables (`POSTGRES_USER`, `POSTGRES_PASSWORD`, etc.) are updated and match across all dependent services in `docker-compose.yml`.
-
-### Q: PersistentVolumeClaim (PVC) stuck in Pending state
-* **Possible Cause**: No default StorageClass is defined in your Kubernetes cluster, or your cluster lacks the necessary provisioner (e.g., AWS EBS CSI Driver).
-* **Solution**:
-  1. Check the status of PVCs:
-     ```bash
-     kubectl get pvc -n <namespace>
-     ```
-  2. Ensure the Amazon EBS CSI driver is installed and has the correct IAM permissions configured on your EKS cluster:
-     ```bash
-     helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
-     helm repo update
-     helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
-       --namespace kube-system
-     ```
-
-### Q: Ingress Controller fails to route traffic or returns 502/503 Service Unavailable
-* **Possible Cause**: The Nginx ingress controller pod is not running, or ingress hostnames do not match target service ports.
-* **Solution**:
-  1. Verify the Ingress pods are running:
-     ```bash
-     kubectl get pods -n ingress-nginx
-     ```
-  2. Ensure the Helm values have the correct service hostname matching the custom domain setup:
-     ```yaml
-     ingress:
-       hostname: app.yourdomain.com
-     ```
